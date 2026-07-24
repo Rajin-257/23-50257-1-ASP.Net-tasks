@@ -1,0 +1,53 @@
+@model List<Blood_Donation_Management.EF.Tables.Donor>
+@{
+    var bloodGroups = ViewBag.BloodGroups as List<string>;
+    var selected = ViewBag.Selected as string;
+}
+
+<form method="get" action="/Report/FilterByBloodGroup">
+    <label>Select Blood Group</label>
+    <select name="bloodGroup">
+        <option value="">-- Select --</option>
+        @if (bloodGroups != null)
+        {
+            foreach (var bg in bloodGroups)
+            {
+                if (selected == bg)
+                {
+                    <option value="@bg" selected>@bg</option>
+                }
+                else
+                {
+                    <option value="@bg">@bg</option>
+                }
+            }
+        }
+    </select>
+    <button type="submit">Filter</button>
+</form>
+
+<br />
+@if (Model != null && Model.Count != 0)
+{
+    <table>
+        <tr>
+            <th>Id</th>
+            <th>Full Name</th>
+            <th>Blood Group</th>
+            <th>Contact No</th>
+            <th>City</th>
+            <th>Last Donation</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.DonorId</td>
+                <td>@item.FullName</td>
+                <td>@item.BloodGroup</td>
+                <td>@item.ContactNo</td>
+                <td>@item.City</td>
+                <td>@item.LastDonationDate</td>
+            </tr>
+        }
+    </table>
+}

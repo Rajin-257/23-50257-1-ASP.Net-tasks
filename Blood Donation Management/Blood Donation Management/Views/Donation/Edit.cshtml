@@ -1,0 +1,38 @@
+@model DonationModel
+@{
+    var donors = ViewBag.Donors as List<Blood_Donation_Management.EF.Tables.Donor>;
+}
+
+<form action="/Donation/Edit" method="post">
+    <input type="hidden" name="DonationId" value="@Model.DonationId" />
+    <label>Select Donor</label>
+    <select name="DonorId">
+        <option value="">-- Select Donor --</option>
+        @if (donors != null)
+        {
+            foreach (var d in donors)
+            {
+                if (Model.DonorId == d.DonorId)
+                {
+                    <option value="@d.DonorId" selected>@d.FullName (@d.BloodGroup)</option>
+                }
+                else
+                {
+                    <option value="@d.DonorId">@d.FullName (@d.BloodGroup)</option>
+                }
+            }
+        }
+    </select>  <br />
+    <span class="text-danger">@Html.ValidationMessage("DonorId")</span> <br />
+    <label>Enter Donation Date</label>
+    <input type="date" name="DonationDate" value="@Model.DonationDate.ToString("yyyy-MM-dd")" /> <br />
+    <span class="text-danger">@Html.ValidationMessage("DonationDate")</span> <br />
+    <label>Enter Volume Ml Blood</label>
+    <input type="number" name="VolumeMl" value="@Model.VolumeMl" /> <br />
+    <span class="text-danger">@Html.ValidationMessage("VolumeMl")</span> <br />
+    <label>Enter Camp Name</label>
+    <input type="text" name="CampName" value="@Model.CampName" /> <br />
+    <span class="text-danger">@Html.ValidationMessage("CampName")</span> <br />
+    <button type="submit">Update</button>
+    <a href="/Donation">Cancel</a>
+</form>

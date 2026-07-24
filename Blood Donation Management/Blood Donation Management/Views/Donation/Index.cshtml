@@ -1,22 +1,66 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model DonationModel
 @{
+    var donations = ViewBag.Donations as List<Blood_Donation_Management.EF.Tables.Donation>;
+    var donors = ViewBag.Donors as List<Blood_Donation_Management.EF.Tables.Donor>;
 }
 
-<form action="/" method="post">
+<form action="/Donation/Index" method="post">
     <label>Select Donor</label>
-    <select>
-        <option value="value">text</option>
-        <option value="value">text</option>
-        <option value="value">text</option>
-        <option value="value">text</option>
-    </select>  <br/>
+    <select name="DonorId">
+        <option value="">-- Select Donor --</option>
+        @if (donors != null)
+        {
+            foreach (var d in donors)
+            {
+                if (Model.DonorId == d.DonorId)
+                {
+                    <option value="@d.DonorId" selected>@d.FullName (@d.BloodGroup)</option>
+                }
+                else
+                {
+                    <option value="@d.DonorId">@d.FullName (@d.BloodGroup)</option>
+                }
+            }
+        }
+    </select>  <br />
+    <span class="text-danger">@Html.ValidationMessage("DonorId")</span> <br />
     <label>Enter Donation Date</label>
-    <input type="date" name="DonationDate" /> <br />
+    <input type="date" name="DonationDate" value="@(Model.DonationDate == default ? "" : Model.DonationDate.ToString("yyyy-MM-dd"))" /> <br />
+    <span class="text-danger">@Html.ValidationMessage("DonationDate")</span> <br />
     <label>Enter Volume Ml Blood</label>
-    <input type="number" name="VolumeMl"/> <br />
+    <input type="number" name="VolumeMl" value="@(Model.VolumeMl == 0 ? "" : Model.VolumeMl.ToString())" /> <br />
+    <span class="text-danger">@Html.ValidationMessage("VolumeMl")</span> <br />
     <label>Enter Camp Name</label>
-    <input type="CampName" name="CampName" /> <br />
+    <input type="text" name="CampName" value="@Model.CampName" /> <br />
+    <span class="text-danger">@Html.ValidationMessage("CampName")</span> <br />
     <button type="submit">Submit</button>
 </form>
+
+<br />
+<table>
+    <tr>
+        <th>Id</th>
+        <th>Donor</th>
+        <th>Donation Date</th>
+        <th>Volume (ml)</th>
+        <th>Camp Name</th>
+        <th>Action</th>
+    </tr>
+    @if (donations != null)
+    {
+        foreach (var d in donations)
+        {
+            <tr>
+                <td>@d.DonationId</td>
+                <td>@(d.Donor?.FullName ?? d.DonorId?.ToString())</td>
+                <td>@(d.DonationDate?.ToString("yyyy-MM-dd"))</td>
+                <td>@d.VolumeMl</td>
+                <td>@d.CampName</td>
+                <td>
+                    <a href="/Donation/Edit/@d.DonationId">Update</a> |
+                    <a href="/Donation/Delete/@d.DonationId" onclick="return confirm('Delete this donation?');">Delete</a>
+                </td>
+            </tr>
+        }
+    }
+</table>

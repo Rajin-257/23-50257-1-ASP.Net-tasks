@@ -1,19 +1,54 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model DonorModel
 @{
+    var donors = ViewBag.Donors as List<Blood_Donation_Management.EF.Tables.Donor>;
 }
 
-<form action="/" method="post">
+<form action="/Donor/Index" method="post">
     <label>Enter Donor Full Name</label>
-    <input type="text" name="FullName" placeholder="Enter Donor Name"/>  <br />
+    <input type="text" name="FullName" value="@Model.FullName" placeholder="Enter Donor Name" />  <br />
+    <span class="text-danger">@Html.ValidationMessage("FullName")</span> <br />
     <label>Enter Donor Blood Group</label>
-    <input type="text" name="BloodGroup" placeholder="Enter Donor Blood Group" /> <br />
+    <input type="text" name="BloodGroup" value="@Model.BloodGroup" placeholder="Enter Donor Blood Group" /> <br />
+    <span class="text-danger">@Html.ValidationMessage("BloodGroup")</span> <br />
     <label>Enter Donor Contact No</label>
-    <input type="text" name="ContactNo" placeholder="Enter Donor Contact" /> <br />
+    <input type="text" name="ContactNo" value="@Model.ContactNo" placeholder="Enter Donor Contact" /> <br />
+    <span class="text-danger">@Html.ValidationMessage("ContactNo")</span> <br />
     <label>Enter Donor City</label>
-    <input type="text" name="city" placeholder="Enter Donor city" /> <br />
+    <input type="text" name="city" value="@Model.city" placeholder="Enter Donor city" /> <br />
+    <span class="text-danger">@Html.ValidationMessage("city")</span> <br />
     <label>Enter Donor Last Donation Date</label>
-    <input type="date" name="LastDonationDate" /> <br />
+    <input type="date" name="LastDonationDate" value="@(Model.LastDonationDate == default ? "" : Model.LastDonationDate.ToString("yyyy-MM-dd"))" /> <br />
+    <span class="text-danger">@Html.ValidationMessage("LastDonationDate")</span> <br />
     <button type="submit">Submit</button>
 </form>
+
+<br />
+<table>
+    <tr>
+        <th>Id</th>
+        <th>Full Name</th>
+        <th>Blood Group</th>
+        <th>Contact No</th>
+        <th>City</th>
+        <th>Last Donation</th>
+        <th>Action</th>
+    </tr>
+    @if (donors != null)
+    {
+        foreach (var d in donors)
+        {
+            <tr>
+                <td>@d.DonorId</td>
+                <td>@d.FullName</td>
+                <td>@d.BloodGroup</td>
+                <td>@d.ContactNo</td>
+                <td>@d.City</td>
+                <td>@d.LastDonationDate.ToString("yyyy-MM-dd")</td>
+                <td>
+                    <a href="/Donor/Edit/@d.DonorId">Update</a> |
+                    <a href="/Donor/Delete/@d.DonorId" onclick="return confirm('Delete this donor?');">Delete</a>
+                </td>
+            </tr>
+        }
+    }
+</table>
